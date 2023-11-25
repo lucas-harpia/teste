@@ -52,8 +52,8 @@ def busca_novo_estabelecimento():
     else:
         messages(f'Falha na requisição HTTP: Status code {response.status_code}')
 
-    all_prints = "\n".join(results)
-    send_telegram_message(all_prints)
+all_prints = "\n".join(results)
+send_telegram_message(all_prints)
 
 
 busca_novo_estabelecimento()

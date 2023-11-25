@@ -11,16 +11,15 @@ def messages(message):
 
 
 def formatar_arquivo(input_filename):
-    messages(f'Formatando arquivo.')
-    print(input_filename)
+    messages(f'Começando a formatação do arquivo.')
 
-    # Lista para armazenar as linhas do arquivo após a manipulação
     linhas_modificadas = []
 
     arquivo_csv = 'arquivo_format.csv'
     arquivo_csv_saida = 'arquivo_alterado.csv'
 
-    with open(input_filename, 'r', encoding='latin-1') as txt_file, open(arquivo_csv, 'w', encoding='utf-8', newline='') as csv_file:
+    with open(input_filename, 'r', encoding='latin-1') as txt_file, open(arquivo_csv, 'w', encoding='utf-8',
+                                                                         newline='') as csv_file:
         # Lê linhas do arquivo de texto e escreve no arquivo CSV
         csv_writer = csv.writer(csv_file, delimiter=';')
         for line in txt_file:
@@ -30,7 +29,6 @@ def formatar_arquivo(input_filename):
             values = [valor.strip('\"') for valor in values]
 
             csv_writer.writerow(values)
-
 
     # Abre o arquivo CSV novamente para leitura e manipulação
     with open(arquivo_csv, 'r', encoding='utf-8') as csv_file:
@@ -54,7 +52,9 @@ def formatar_arquivo(input_filename):
         csv_writer_saida = csv.writer(csv_saida, delimiter=';')
         csv_writer_saida.writerows(linhas_modificadas)
 
-
+    os.remove('arquivo_atualizacao.txt')
+    os.remove(arquivo_csv)
     # inserir_dados_do_arquivo(arquivo_csv_saida, 'estabelecimento', '../cnpj.db')
 
-formatar_arquivo("arquivo_atualizacao_format.txt")
+
+
