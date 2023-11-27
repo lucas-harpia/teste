@@ -2,19 +2,14 @@ import httpx
 import os
 from tqdm import tqdm
 from zipfile import ZipFile
-from src.telegram import send_telegram_message
 from src.estabelecimento.formatar_arquivo import formatar_arquivo
+from src.telegram import add_log, send_all_logs
 
-results = []
 httpx_client = httpx.Client()
 
 
-def messages(message):
-    results.append(message)
-
-
 def download_and_extract(url, dest_filename, max_attempts=3):
-    messages(f'Começando Download da Fonte de dados: {url}')
+    add_log(f'Começando Download da Fonte de dados: {url}\n')
 
     for attempt in range(1, max_attempts + 1):
         try:
@@ -34,13 +29,15 @@ def download_and_extract(url, dest_filename, max_attempts=3):
                         file.write(data)
                         bar.update(len(data))
 
+                add_log('Download concluído com sucesso.\n')
+
                 script_dir = os.path.dirname(os.path.abspath(__file__))
                 extract_path = os.path.join(script_dir, '.zip', '')
 
                 with ZipFile(dest_filename, 'r') as zip_ref:
                     zip_ref.extractall(extract_path)
 
-                messages(f'Arquivo extraído.')
+                add_log(f'Arquivo extraído.\n')
 
                 # Obtém a lista de arquivos extraídos
                 extracted_files = os.listdir(extract_path)
@@ -56,13 +53,13 @@ def download_and_extract(url, dest_filename, max_attempts=3):
                 return extract_path
         except httpx.ReadTimeout:
             if attempt < max_attempts:
-                messages(f"Tentativa {attempt} de {max_attempts} falhou. Tentando novamente.")
+                add_log(f"Tentativa {attempt} de {max_attempts} falhou. Tentando novamente.\n")
+                send_all_logs()
             else:
-                messages(f"Até {max_attempts} tentativas falharam. Abortando.")
+                add_log(f"Até {max_attempts} tentativas falharam. Abortando.\n")
+                send_all_logs()
                 raise
         except Exception as e:
-            messages(f"Erro desconhecido: {e}")
+            add_log(f"Erro desconhecido: {e}\n")
+            send_all_logs()
             raise
-        finally:
-            all_prints = "\n".join(results)
-            send_telegram_message(all_prints)

@@ -4,7 +4,7 @@ services:
   app:
     image: python:3.10.13-alpine
     ports:
-      - "9082:8082"
+      - "9089:8089"
     volumes:
       - type: bind
         source: .

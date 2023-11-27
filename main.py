@@ -1,10 +1,10 @@
 import uvicorn
 import time
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI
 from routes.api import router as api_router
 
 def create_app() -> FastAPI:
-    current_app = FastAPI(title="Plugin de dados - IBIOSEG",
+    current_app = FastAPI(title="Plugin de dados - CNPJ",
                           description="",
                           version="1.0.0", )
 
@@ -25,6 +25,6 @@ async def add_process_time_header(request, call_next):
 
 
 if __name__ == '__main__':
-    uvicorn.run("main:app", host='127.0.0.1', port=8000,
+    uvicorn.run("main:app", host='0.0.0.0', port=8089,
                 log_level="info", reload=True)
     print("running")

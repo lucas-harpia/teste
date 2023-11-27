@@ -2,21 +2,15 @@ import requests
 import os
 from bs4 import BeautifulSoup
 from src.estabelecimento.download_estabelecimento import download_and_extract
-from src.telegram import send_telegram_message
-
-results = []
-
-
-def messages(message):
-    results.append(message)
+from src.telegram import add_log, send_telegram_message as send, send_all_logs
 
 
 def busca_novo_estabelecimento():
-    messages('----PLUGIN-CNPJ-INICIADO-TABELA-ESTABELECIMENTO----\n')
-    all_prints = "\n".join(results)
-    send_telegram_message(all_prints)
+    results = []
 
-    messages('----PLUGIN-CNPJ-CONSOLIDADO-TABELA-ESTABELECIMENTO----\n')
+    send('----PLUGIN-CNPJ-INICIADO-TABELA-ESTABELECIMENTO----')
+    add_log('----PLUGIN-CNPJ-CONSOLIDADO-TABELA-ESTABELECIMENTO----\n')
+
     base_url = 'https://dadosabertos.rfb.gov.br/CNPJ/'
     response = requests.get(base_url)
 
@@ -37,23 +31,18 @@ def busca_novo_estabelecimento():
                     arquivo.write(link['href'] + '\n')
                 link_novo_estabelecimento = base_url + link['href']
                 nome_arquivo = link['href']
+                add_log(f'Novo link encontrado: {link_novo_estabelecimento}\n')
 
-                messages(f'Novo link encontrado: {link_novo_estabelecimento}\n')
-                messages(f'Começando o download do novo arquivo: {nome_arquivo}\n')
-
-                # Adicionando o código para o download aqui
                 dest_filename = os.path.join(script_dir, nome_arquivo)
                 download_and_extract(link_novo_estabelecimento, dest_filename)
 
         with open(arquivo_path, 'r') as arquivo:
             content = arquivo.readlines()
-        messages('A lista de links de estabelecimento está atualizada.\n')
-        messages(f'Lista atualizada de links de estabelecimentos no Banco de Dados:\n' + ''.join(content))
+        add_log('A lista de links de estabelecimento está atualizada.\n')
+        add_log(f'Lista atualizada de links de estabelecimentos no Banco de Dados:\n' + ''.join(content))
+        send_all_logs()
     else:
-        messages(f'Falha na requisição HTTP: Status code {response.status_code}')
-
-all_prints = "\n".join(results)
-send_telegram_message(all_prints)
-
+        add_log(f'Falha na requisição HTTP: Status code {response.status_code}')
+        send_all_logs()
 
 busca_novo_estabelecimento()
