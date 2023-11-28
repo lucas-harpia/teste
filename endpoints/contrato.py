@@ -9,7 +9,7 @@ router = APIRouter(tags=['contrato'], responses={
                    404: {"description": "Not found"}})
 
 
-@router.get("/contrato", dependencies=[Depends(authenticate_token)])
+@router.get("/contrato/cnpj", dependencies=[Depends(authenticate_token)])
 
 async def read_contrato():
 
@@ -27,23 +27,96 @@ async def read_contrato():
         descricao=os.getenv("DESCRICAO"),
         consultas=[
             {
-                "nome": "Buscar dados de pessoa.",
-                "url": "biografia",
-                "descricao": "Dados biográficos de Pessoa",
+                "nome": "Buscar dados de um Estabelecimento.",
+                "url": "busca",
+                "descricao": "Dados biográficos de um Estabelecimentdo.",
                 "filtros": [
                     {
-                        "url": "cpf",
-                        "instrucao": "Digite um cpf de pessoa que deseja encontrar",
+                        "url": "estabelecimento",
+                        "instrucao": "Digite o CNPJ do estabelecimento que deseja encontrar",
                         "atributos": [
                             {
-                                "rotulo": "Cpf",
-                                "chave": "cpf",
-                                "tipo": "1",
+                                "rotulo": "CNPJ",
+                                "chave": "cnpj",
+                                "tipo": "3",
+                                "mascara": ""
+                            }
+                        ]
+                    },
+                    {
+                        "url": "nomefantasia",
+                        "instrucao": "Digite o Nome Fantasia do Estabelecimento que deseja encontrar",
+                        "atributos": [
+                            {
+                                "rotulo": "Nome Fantasia",
+                                "chave": "nme_fan",
+                                "tipo": "2",
                                 "mascara": ""
                             }
                         ]
                     }
-
+                ]
+            },
+            {
+                "nome": "Buscar dados de uma Empresa.",
+                "url": "busca",
+                "descricao": "Dados biográficos de uma Empresa.",
+                "filtros": [
+                    {
+                        "url": "empresa",
+                        "instrucao": "Digite o CNPJ da empresa que deseja encontrar",
+                        "atributos": [
+                            {
+                                "rotulo": "CNPJ",
+                                "chave": "cnpj",
+                                "tipo": "3",
+                                "mascara": ""
+                            }
+                        ]
+                    },
+                    {
+                        "url": "razao",
+                        "instrucao": "Digite a Razão Social da empresa que deseja encontrar",
+                        "atributos": [
+                            {
+                                "rotulo": "Razão Social",
+                                "chave": "rzao",
+                                "tipo": "2",
+                                "mascara": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "nome": "Buscar dados de uma Pessoa(Sócio).",
+                "url": "busca",
+                "descricao": "Dados biográficos de uma Pessoa(Sócio).",
+                "filtros": [
+                    {
+                        "url": "socio",
+                        "instrucao": "Digite o CNPJ da pessoa que deseja encontrar",
+                        "atributos": [
+                            {
+                                "rotulo": "CNPJ",
+                                "chave": "cnpj",
+                                "tipo": "3",
+                                "mascara": ""
+                            }
+                        ]
+                    },
+                    {
+                        "url": "nome",
+                        "instrucao": "Digite o Nome da Pessoa que deseja encontrar",
+                        "atributos": [
+                            {
+                                "rotulo": "Nome",
+                                "chave": "nme",
+                                "tipo": "2",
+                                "mascara": ""
+                            }
+                        ]
+                    }
                 ]
             }
         ]

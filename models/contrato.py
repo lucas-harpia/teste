@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-from typing import List, Optional
+from typing import List
 from pydantic import BaseModel
 
 
